@@ -38,6 +38,25 @@ gh aw version
 > gh extension install github/gh-aw@v0.1.0
 > ```
 
+### 🔍 What Just Happened?
+
+`gh aw` is a **GitHub CLI extension** — a Go binary from the [github/gh-aw](https://github.com/github/gh-aw) repository that adds the `gh aw` command family to your terminal.
+
+It provides **three core capabilities** that map to the workflow lifecycle:
+
+```
+ ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
+ │  AUTHOR   │────▶│ COMPILE  │────▶│   RUN    │────▶│ MONITOR  │
+ │           │     │          │     │          │     │          │
+ │ init, new │     │ compile  │     │ run      │     │ logs     │
+ │ add, add- │     │ validate │     │ trial    │     │ audit    │
+ │ wizard    │     │ fix      │     │ enable   │     │ health   │
+ │ secrets   │     │          │     │ disable  │     │ status   │
+ └──────────┘     └──────────┘     └──────────┘     └──────────┘
+```
+
+**Key insight**: The `gh aw` extension runs **locally on your machine**. It creates and compiles workflow files. The actual AI agents (Copilot, Claude, Codex, Gemini) run **remotely in GitHub Actions** — your local CLI never executes AI inference itself.
+
 ---
 
 ## Step 2 — Initialize Your Repository
@@ -54,6 +73,25 @@ The interactive wizard will:
 2. Create `.github/agents/agentic-workflows.agent.md`
 3. Ask you to select an AI engine (Copilot, Claude, Codex, or Gemini)
 4. Prompt you to configure the required API secret
+
+### 🔍 What Just Happened?
+
+`gh aw init` created **5 files** that prepare your repository for agentic workflows:
+
+| File | Purpose |
+|------|---------|
+| **`.gitattributes`** | Marks `.lock.yml` files as `linguist-generated` (excluded from GitHub language stats and diffs) and sets `merge=ours` strategy to prevent merge conflicts when multiple branches compile the same workflow |
+| **`.github/agents/agentic-workflows.agent.md`** | **Dispatcher agent** for GitHub Copilot Chat. When you type `/agent` in Copilot Chat and select `agentic-workflows`, this file routes your request to specialized prompts (create, debug, upgrade, report, etc.) |
+| **`.github/workflows/copilot-setup-steps.yml`** | A GitHub Actions workflow that installs the `gh aw` CLI (SHA-pinned to the exact version) so the **Copilot coding agent** can use it as an MCP server during automated runs |
+| **`.vscode/mcp.json`** | Configures `gh aw mcp-server` as a **Model Context Protocol server** for VSCode. This lets Copilot Chat in VSCode invoke `gh aw` commands (status, compile, logs, audit, etc.) directly |
+| **`.vscode/settings.json`** | Enables GitHub Copilot for markdown files, so you get AI assistance when editing `.md` workflow files |
+
+**What this means for your repository**:
+- ✅ Copilot Chat can now interact with `gh aw` commands via MCP
+- ✅ Lock files (`.lock.yml`) won't cause merge conflicts
+- ✅ You're ready to **create or add agentic workflows**
+
+> **Note**: No agentic workflows exist yet — the next steps add actual workflow files.
 
 ---
 
@@ -92,6 +130,26 @@ gh aw secrets set GEMINI_API_KEY --value "your_gemini_key_here"
 
 > **Verify**: Run `gh aw secrets bootstrap` to check all required secrets are configured.
 
+### 🔍 What Just Happened?
+
+**Why do you need a secret?** Agentic workflows run AI coding agents (Copilot, Claude, Codex, Gemini) inside GitHub Actions. These are **external AI services** that require authentication — the secret tells the service "this user is authorized to make AI requests."
+
+**What each secret authenticates**:
+
+| Secret | What It Does |
+|--------|-------------|
+| `COPILOT_GITHUB_TOKEN` | A fine-grained **GitHub PAT** with "Copilot Requests: Read" permission. Associates workflow runs with your Copilot subscription. Must be owned by your **user account** (not an org) |
+| `ANTHROPIC_API_KEY` | An **Anthropic API key** that authenticates against Anthropic's Claude API. Billed to your Anthropic account |
+| `OPENAI_API_KEY` | An **OpenAI API key** for Codex access. Billed to your OpenAI account |
+| `GEMINI_API_KEY` | A **Google AI Studio API key** for Gemini access. Billed to your Google account |
+
+**Where secrets are stored**: Secrets are encrypted and stored in **GitHub Actions secret storage** — they're never exposed in logs, workflow files, or to the AI agent itself. The agent runs in a read-only sandbox and authenticates through a separate, isolated process.
+
+**`gh aw secrets bootstrap`** is a verification tool that:
+1. Scans all your workflow files to determine which engine secrets are needed
+2. Checks which secrets already exist in the repository
+3. Interactively prompts you to set any missing ones
+
 ---
 
 ## Step 4 — Add Your First Workflow (Pre-Built)
@@ -116,6 +174,25 @@ After completion, you'll see:
     └── daily-repo-status.lock.yml     # Compiled GitHub Actions YAML
 ```
 
+### 🔍 What Just Happened?
+
+**`add-wizard` vs `add`**: The `add-wizard` command is the **interactive, guided** version — it walks you through engine selection, secret setup, and optionally triggers the first run. The `add` command does the same thing **non-interactively** (better for CI/automation).
+
+**Two files were created** — this is the fundamental pattern of agentic workflows:
+
+| File | Role | Editable? |
+|------|------|-----------|
+| **`daily-repo-status.md`** | **Source file** — your natural language workflow with YAML frontmatter (config) + Markdown body (AI instructions) | ✅ Yes — this is what you edit |
+| **`daily-repo-status.lock.yml`** | **Compiled output** — hardened GitHub Actions YAML that GitHub Actions actually executes | ⚠️ Auto-generated — don't edit directly |
+
+**What "compilation" means**: The `gh aw compile` command (run automatically by the wizard) transforms your `.md` file into a production-ready GitHub Actions workflow with:
+- SHA-pinned action references (no supply chain attacks)
+- Security hardening (read-only permissions, network controls)
+- Resolved imports and merged configurations
+- Tool configurations and MCP server setups
+
+**The Agentics Collection** ([githubnext/agentics](https://github.com/githubnext/agentics)) is GitHub's official repository of pre-built agentic workflows. It includes workflows for daily reports, CI diagnostics, issue triage, PR reviews, and more — ready to add with a single command.
+
 ---
 
 ## Step 5 — Trigger Your First Run
@@ -131,6 +208,43 @@ gh aw status --ref main
 ```
 
 Wait 2–3 minutes for completion. The workflow will create a **GitHub Issue** with a daily status report for your repository.
+
+### 🔍 What Just Happened?
+
+**Under the hood**, `gh aw run` calls GitHub's `workflow_dispatch` API — the same mechanism as clicking "Run workflow" in the GitHub Actions UI. This only works with workflows that have a `workflow_dispatch` trigger (which compiled agentic workflows include by default).
+
+**The execution pipeline** inside GitHub Actions follows this security-layered flow:
+
+```
+┌──────────────────┐
+│ 1. PRE-ACTIVATION │  Checks user roles and permissions.
+│    Job            │  Verifies the triggering user is authorized.
+└────────┬─────────┘  Posts a 👀 reaction on the triggering item.
+         ▼
+┌──────────────────┐
+│ 2. AGENT JOB      │  The AI coding agent runs HERE.
+│    (Read-Only)    │  It reads your repo, interprets the markdown
+│                   │  instructions, and generates structured output.
+│                   │  🔒 No write permissions — cannot modify the repo.
+└────────┬─────────┘
+         ▼
+┌──────────────────┐
+│ 3. THREAT         │  AI-powered security scan of agent output.
+│    DETECTION      │  Checks for: prompt injection, secret leaks,
+│                   │  malicious code patches.
+└────────┬─────────┘  ❌ Blocks if threats detected.
+         ▼
+┌──────────────────┐
+│ 4. SAFE OUTPUT    │  Separate jobs with SCOPED write permissions.
+│    JOBS           │  Creates issues, comments, PRs, labels —
+│                   │  only the operations declared in safe-outputs.
+└──────────────────┘
+```
+
+**Monitoring your run**:
+- `gh aw status --ref main` — Check if the workflow is running/completed
+- `gh aw logs daily-repo-status` — Download and analyze execution logs
+- `gh aw audit <run-id>` — Deep-dive into a specific run with error analysis
 
 ---
 
@@ -197,6 +311,51 @@ Or trigger manually:
 ```bash
 gh aw run issue-greeter
 ```
+
+### 🔍 What Just Happened?
+
+**You just authored your first custom agentic workflow.** Let's break down the anatomy:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  .github/workflows/issue-greeter.md                      │
+│                                                          │
+│  ┌─── FRONTMATTER (YAML between --- markers) ─────────┐ │
+│  │ on:              ← WHEN to run (trigger)            │ │
+│  │ permissions:     ← WHAT the agent can read          │ │
+│  │ safe-outputs:    ← WHAT the workflow can write      │ │
+│  │ tools:           ← WHAT tools the agent can use     │ │
+│  │ engine:          ← WHICH AI to use                  │ │
+│  │ network:         ← WHICH domains are accessible     │ │
+│  └─────────────────────────────────────────────────────┘ │
+│                                                          │
+│  ┌─── MARKDOWN BODY ──────────────────────────────────┐ │
+│  │ # Issue Greeter                                     │ │
+│  │                                                     │ │
+│  │ Natural language instructions that the AI agent     │ │
+│  │ reads and follows at runtime.                       │ │
+│  └─────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+```
+
+**What `gh aw compile` produced** (the `.lock.yml` file):
+- Full GitHub Actions YAML with multiple jobs (pre-activation, agent, threat detection, safe outputs)
+- All referenced GitHub Actions **SHA-pinned** to exact commit hashes
+- Network firewall configuration with domain allowlists
+- MCP server configurations for GitHub API tools
+- Permission separation: agent job is read-only, safe output jobs get scoped write permissions
+
+**💡 Key insight — the "edit without recompile" property**:
+- The **markdown body** (your AI instructions) is loaded **at runtime** from the `.md` file
+- You can edit it directly on GitHub.com → changes take effect on the **next workflow run**
+- **No recompilation needed** for instruction changes!
+
+**⚠️ When you MUST recompile** (`gh aw compile`):
+- Any change to the **frontmatter** (triggers, permissions, tools, safe-outputs, network, engine)
+- Adding or removing **imports**
+- Changing **MCP server configurations**
+
+> **Rule of thumb**: If you changed anything between the `---` markers, run `gh aw compile`.
 
 ---
 
