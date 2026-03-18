@@ -1,364 +1,206 @@
-# Project Title
+# Agentic Workflows Quick Start
 
-<!-- TEMPLATE: Replace with your project name. Keep it concise. -->
+> **Get AI-powered repository automation running in minutes — write workflows in Markdown, not YAML.**
 
-> **One compelling sentence that makes the reader want to keep scrolling.**
-
-<!-- TEMPLATE: Write a tagline that captures the VALUE of this project.
-     Examples from real repos:
-     - "Stop vibe coding. Start specifying."
-     - "Local Markdown archive of GitHub Changelog with AI-generated deep-dive analysis"
-     Ask yourself: if someone reads ONLY this line, do they understand why this project exists?
--->
-
-<!-- TEMPLATE: Pick the badges relevant to your project. Delete the rest. -->
-
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/shinyay/REPO_NAME)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/shinyay/agentic-worflows-quick-start)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://gist.githubusercontent.com/shinyay/56e54ee4c0e22db8211e05e70a63247e/raw/f3ac65a05ed8c8ea70b653875ccac0c6dbc10ba1/LICENSE)
 
-<!-- TEMPLATE: Add any of these as needed:
-[![CI](https://github.com/shinyay/REPO_NAME/actions/workflows/ci.yml/badge.svg)](https://github.com/shinyay/REPO_NAME/actions/workflows/ci.yml)
-[![GitHub release](https://img.shields.io/github/v/release/shinyay/REPO_NAME)](https://github.com/shinyay/REPO_NAME/releases)
--->
-
-A 1–2 sentence **elevator pitch**: what this project IS, who it's FOR, and why it MATTERS. Include a key metric if possible (e.g., "18 scenarios", "8-level curriculum", "5-layer pipeline").
-
-<!-- TEMPLATE: The elevator pitch should answer three questions in ≤2 sentences:
-     1. WHAT is this? (tool / workshop / library / pipeline / template)
-     2. WHO is this for? (developers / DevOps / learners / teams)
-     3. WHY should they care? (saves time / teaches skills / automates X)
--->
+A hands-on quick start repository for **[GitHub Agentic Workflows](https://github.github.io/gh-aw/)** — the new automation paradigm where you describe what you want in plain English Markdown, and AI coding agents execute it in GitHub Actions with built-in security guardrails. Includes 2 working workflows, a step-by-step tutorial, and comprehensive CLI reference documentation.
 
 > [!NOTE]
-> **Status/Version disclaimer** — e.g., "This project is built against v1.2.3 as of 2026-02-21. APIs may change."
-
-<!-- TEMPLATE: DELETE this alert if your project is stable. Keep it for preview/evolving tools.
-     GitHub supports these alert types — use sparingly (max 2-3 per README):
-     > [!NOTE]      — Useful information the reader should know
-     > [!TIP]       — Helpful advice to save time or prevent mistakes
-     > [!IMPORTANT] — Key information the reader must not miss
-     > [!WARNING]   — Urgent attention needed to avoid problems
-     > [!CAUTION]   — Potential risks or irreversible actions
--->
+> **GitHub Agentic Workflows is in technical preview** (as of February 2026). Using agentic workflows requires careful attention to security considerations and human supervision. See the [Security Architecture](https://github.github.io/gh-aw/introduction/architecture/) for details.
 
 ---
 
 ## 🚀 Quick Start
 
-<!-- TEMPLATE: This is the MOST IMPORTANT section. Get the reader to "it works!" in the fewest steps. -->
-
 **Prerequisites:**
 
-- [ ] Prerequisite 1 — e.g., **Node.js 18+** (`node --version`)
-- [ ] Prerequisite 2 — e.g., **GitHub account** with [Copilot](https://github.com/features/copilot) access
-- [ ] Prerequisite 3 — e.g., **Git** (`git --version`)
+- [x] **GitHub CLI** v2.0.0+ — `gh --version`
+- [x] **GitHub repository** with Actions enabled
+- [x] **AI Provider Account** — [GitHub Copilot](https://github.com/features/copilot) (recommended), [Anthropic Claude](https://console.anthropic.com/), [OpenAI](https://platform.openai.com/api-keys), or [Google Gemini](https://aistudio.google.com/api-keys)
 
-<!-- TEMPLATE: Use checkboxes for prerequisites. Include the verification command in parentheses. -->
-
-### 1. Set up the environment
-
-<!-- TEMPLATE: Replace with your actual setup steps. If you have a Codespaces badge, mention "click the badge above". -->
+### 1. Install the `gh aw` CLI extension
 
 ```bash
-git clone https://github.com/shinyay/REPO_NAME.git
-cd REPO_NAME
+gh extension install github/gh-aw
+gh aw version  # Verify: v0.61.0
 ```
 
-<details>
-<summary>Alternative: VS Code + Dev Containers (local)</summary>
-
-1. Install [Docker](https://www.docker.com/products/docker-desktop) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-2. Clone this repository
-3. Open in VS Code → click **"Reopen in Container"** when prompted
-
-</details>
-
-### 2. Install dependencies
+### 2. Initialize your repository
 
 ```bash
-npm install
+gh aw init
 ```
 
-### 3. Run and verify
+### 3. Set up your AI engine secret and add a workflow
 
 ```bash
-npm start
+# Set your Copilot token (or ANTHROPIC_API_KEY / OPENAI_API_KEY / GEMINI_API_KEY)
+gh aw secrets set COPILOT_GITHUB_TOKEN --value "your_token_here"
+
+# Add a pre-built workflow with guided setup
+gh aw add-wizard githubnext/agentics/daily-repo-status
+
+# Or trigger manually
+gh aw run daily-repo-status
 ```
 
-If you see `✓ Server running on port 3000` — your setup works! You're ready to go.
+If you see a new **GitHub Issue** with a daily status report — your setup works! 🎉
 
-<!-- TEMPLATE: ALWAYS include a verification step. The reader needs to know "it worked".
-     Examples: "If you see Response: 4", "Open http://localhost:3000", "All tests should pass" -->
+> [!TIP]
+> See [`doc/getting-started-tutorial.md`](doc/getting-started-tutorial.md) for the full 10-step walkthrough with detailed "🔍 What Just Happened?" explanations after each step.
 
 ---
 
 ## 💡 Overview
 
-<!-- TEMPLATE: Explain the WHY — what problem does this solve? How does it work conceptually?
-     This is where you differentiate from other projects. -->
+### What are GitHub Agentic Workflows?
 
-### What problem does this solve?
+**Agentic workflows** are AI-powered automation that you write in **natural language Markdown** instead of complex YAML. An AI coding agent (Copilot, Claude, Codex, or Gemini) reads your instructions and executes them in GitHub Actions with built-in security guardrails.
 
-Describe the pain point in 2–3 sentences. What was the user doing before this project existed?
-
-### How does it work?
-
-<!-- TEMPLATE: Include an ASCII diagram if your project has multiple components.
-     ASCII diagrams > paragraphs of explanation. -->
+### How it works
 
 ```
-Component A → Component B → Component C
-     ↓              ↓
-  Storage        Output
+ ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+ │   AUTHOR      │────▶│   COMPILE    │────▶│     RUN      │────▶│   MONITOR    │
+ │               │     │              │     │              │     │              │
+ │ Write .md     │     │ gh aw compile│     │ gh aw run    │     │ gh aw logs   │
+ │ (Markdown +   │     │              │     │              │     │ gh aw audit  │
+ │  frontmatter) │     │ Produces     │     │ AI agent     │     │ gh aw health │
+ │               │     │ .lock.yml    │     │ runs in      │     │ gh aw status │
+ │               │     │ (hardened    │     │ GitHub       │     │              │
+ │               │     │  Actions     │     │ Actions      │     │              │
+ │               │     │  YAML)       │     │              │     │              │
+ └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
 ```
 
-<!-- TEMPLATE: Replace with your actual architecture. Examples:
-     "Your App → SDK Client → (JSON-RPC) → Copilot CLI → LLM API"
-     "Fetch → Analyze → Translate → Present → Validate"
--->
+**Key security properties:**
+- 🔒 Agent runs **read-only** by default — no direct write access to your repository
+- 🛡️ Write operations go through **safe outputs** — separate permission-controlled jobs
+- 🔥 **Agent Workflow Firewall (AWF)** — network egress controlled by domain allowlist
+- 🔍 **Threat detection** — AI-powered security scan before any writes are applied
+- 📌 All GitHub Actions **SHA-pinned** at compile time — no supply chain attacks
 
 ---
 
-## ✨ Features
+## ✨ What's in This Repository
 
-<!-- TEMPLATE: Choose ONE format below and delete the other.
-     Use the TABLE format for 4+ features with descriptions.
-     Use the LIST format for simple feature enumeration. -->
+### Agentic Workflows
 
-<!-- FORMAT A: Rich table (recommended for 4+ features) -->
+| Workflow | Trigger | What It Does |
+|----------|---------|-------------|
+| **[daily-repo-status](/.github/workflows/daily-repo-status.md)** | Daily schedule + manual | Analyzes repo activity and creates a status report issue with insights, highlights, and recommendations |
+| **[github-changelog-summary](/.github/workflows/github-changelog-summary.md)** | Weekly on Monday + manual | Fetches [GitHub Changelog](https://github.blog/changelog/), categorizes entries (Features, Changes, Deprecations, Security, API), and creates a summary issue |
 
-| Feature | Description |
-|---------|-------------|
-| **Feature 1** | What it does and why it matters |
-| **Feature 2** | What it does and why it matters |
-| **Feature 3** | What it does and why it matters |
-| **Feature 4** | What it does and why it matters |
+### Documentation
 
-<!-- FORMAT B: Bullet list (for simpler projects)
-- **Feature 1** — Brief description
-- **Feature 2** — Brief description
-- **Feature 3** — Brief description
--->
+| Document | Description |
+|----------|-------------|
+| **[Getting Started Tutorial](doc/getting-started-tutorial.md)** | 10-step walkthrough with "🔍 What Just Happened?" explanations for each step |
+| **[gh aw CLI Reference](doc/gh-aw-cli-reference.md)** | Complete reference for all 29 CLI commands with flags, examples, and recipes |
+| **[GitHub Agentic Workflows Research](doc/github-agentic-workflows-https-github-github-io-gh.md)** | Deep research report covering architecture, security model, safe outputs, tools, triggers, and more |
 
 ---
 
-## 🏗️ Architecture
-
-<!-- TEMPLATE: DELETE this section if your project is simple (single script, small library).
-     KEEP it if your project has multiple components, layers, or services. -->
-
-### Project Structure
+## 🏗️ Project Structure
 
 ```
-project-root/
-├── src/                # Source code
-│   ├── main.ts         # Entry point
-│   └── utils/          # Shared utilities
-├── tests/              # Test suite
-├── docs/               # Documentation
-├── .github/            # GitHub configuration
-│   ├── workflows/      # CI/CD pipelines
-│   └── copilot-instructions.md
-├── package.json
+agentic-worflows-quick-start/
+├── .github/
+│   ├── agents/
+│   │   └── agentic-workflows.agent.md    # Copilot Chat dispatcher agent
+│   ├── aw/
+│   │   └── actions-lock.json             # Pinned GitHub Actions versions
+│   └── workflows/
+│       ├── copilot-setup-steps.yml       # MCP server setup for Copilot Agent
+│       ├── daily-repo-status.md          # Workflow source (natural language)
+│       ├── daily-repo-status.lock.yml    # Compiled GitHub Actions YAML
+│       ├── github-changelog-summary.md   # Workflow source (natural language)
+│       └── github-changelog-summary.lock.yml  # Compiled GitHub Actions YAML
+├── .vscode/
+│   ├── mcp.json                          # MCP server config for VSCode
+│   └── settings.json                     # Copilot markdown support
+├── doc/
+│   ├── getting-started-tutorial.md       # Step-by-step tutorial
+│   ├── gh-aw-cli-reference.md            # Complete CLI reference
+│   └── github-agentic-workflows-*.md     # Deep research report
+├── .gitattributes                        # Lock file merge strategy
 └── README.md
 ```
-
-<!-- TEMPLATE: Replace with your actual directory tree.
-     Only show important directories/files — not every file. -->
 
 ---
 
 ## 📖 Usage
 
-<!-- TEMPLATE: Show how to use the project AFTER setup. Include the "I want to…" table
-     for projects with multiple use cases. Delete if your project has a single workflow. -->
-
 ### Quick Reference: "I want to…"
 
 | I want to… | Do this |
 |------------|---------|
-| Run the dev server | `npm run dev` |
-| Run all tests | `npm test` |
-| Build for production | `npm run build` |
-| Add a new feature | See [Contributing](#-contributing) |
+| Set up the repo for agentic workflows | `gh aw init` |
+| Add a pre-built workflow | `gh aw add-wizard githubnext/agentics/<name>` |
+| Create my own workflow | `gh aw new my-workflow` → edit → `gh aw compile` |
+| Compile all workflows | `gh aw compile` |
+| Run a workflow manually | `gh aw run <workflow>` |
+| Check workflow status | `gh aw status --ref main` |
+| View execution logs | `gh aw logs <workflow>` |
+| Debug a failed run | `gh aw audit <run-id>` |
+| Check health metrics | `gh aw health` |
+| Set up missing secrets | `gh aw secrets bootstrap` |
+| Test without affecting production | `gh aw trial <workflow-spec>` |
+| List all workflows | `gh aw list` |
 
-<!-- TEMPLATE: This "I want to…" pattern is the most user-friendly navigation.
-     Replace with your project's actual tasks. -->
-
-### Example
+### Creating Your Own Workflow
 
 ```bash
-# Example command or code snippet showing typical usage
-```
+# 1. Create a template
+gh aw new my-custom-workflow
 
-<!-- TEMPLATE: Show a REAL example, not pseudocode. The reader should be able to
-     copy-paste and run this immediately after Quick Start. -->
+# 2. Edit .github/workflows/my-custom-workflow.md
+#    - Configure frontmatter (triggers, permissions, tools, safe-outputs)
+#    - Write your AI instructions in the markdown body
+
+# 3. Compile
+gh aw compile my-custom-workflow
+
+# 4. Commit, push, and run
+git add .github/
+git commit -m "Add my-custom-workflow"
+git push
+gh aw run my-custom-workflow
+```
 
 > [!TIP]
-> Pro tip or important usage note that saves time or prevents common mistakes.
-
-<!-- TEMPLATE: DELETE this tip if you don't have one. Don't add filler tips. -->
-
----
-
-## 📦 Installation
-
-<!-- TEMPLATE: DELETE this section if Quick Start already covers installation.
-     KEEP it if you support multiple installation methods (npm, brew, curl, etc.). -->
-
-### npm
-
-```bash
-npm install -g your-package
-```
-
-### Homebrew (macOS / Linux)
-
-```bash
-brew install your-package
-```
-
-<details>
-<summary>Other installation methods</summary>
-
-### curl (Install Script)
-
-```bash
-curl -fsSL https://example.com/install | bash
-```
-
-### From Source
-
-```bash
-git clone https://github.com/shinyay/REPO_NAME.git
-cd REPO_NAME
-npm install && npm run build
-```
-
-</details>
-
----
-
-## 🛠️ Development
-
-<!-- TEMPLATE: DELETE this section for non-code projects (workshops, documentation repos).
-     KEEP it for libraries, tools, and applications. -->
-
-### Local Setup
-
-```bash
-git clone https://github.com/shinyay/REPO_NAME.git
-cd REPO_NAME
-npm install
-```
-
-### Running Tests
-
-```bash
-npm test
-```
-
-### Linting
-
-```bash
-npm run lint
-```
-
----
-
-## 🌐 Access Points
-
-<!-- TEMPLATE: DELETE this section if your project doesn't expose web services.
-     KEEP for projects with web UIs, APIs, admin panels, databases, etc. -->
-
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| **Application** | http://localhost:PORT/ | — |
-| **Admin Panel** | http://localhost:PORT/ | user / pass |
-| **API Docs** | http://localhost:PORT/docs | — |
-
-<!-- TEMPLATE: Include database connection details if applicable:
-     ```properties
-     Host: localhost
-     Port: 5432
-     Database: mydb
-     User: myuser
-     Password: mypass
-     ```
--->
-
----
-
-## 🔧 Troubleshooting
-
-<!-- TEMPLATE: DELETE this section if your project is simple (single script, small library).
-     KEEP for projects with environment dependencies, Docker, external services, etc. -->
-
-<details>
-<summary><b>Common Issues & Solutions</b></summary>
-
-### Issue Category 1
-
-**Symptom description:**
-```bash
-# Diagnostic command to identify the problem
-```
-
-**Solution:**
-```bash
-# Fix command
-```
-
-### Issue Category 2
-
-**Symptom description:**
-```bash
-# Diagnostic command
-```
-
-**Solution:**
-```bash
-# Fix command
-```
-
-<!-- TEMPLATE: Use <details> for long dependency lists, detailed configs,
-     or verbose troubleshooting that would clutter the main flow.
-     Group issues by category (Build, Deployment, Environment, etc.). -->
-
-</details>
+> The **markdown body** (AI instructions) can be edited directly on GitHub.com without recompiling. Only **frontmatter changes** (triggers, permissions, tools) require `gh aw compile`.
 
 ---
 
 ## 📚 References
 
-<!-- TEMPLATE: Use a table for 3+ links. Use a bullet list for fewer. -->
-
 | Resource | Link |
 |----------|------|
-| Official Documentation | [docs.example.com](https://docs.example.com) |
-| API Reference | [api.example.com](https://api.example.com) |
-| Related Project | [github.com/org/project](https://github.com/org/project) |
+| GitHub Agentic Workflows Docs | [github.github.io/gh-aw](https://github.github.io/gh-aw/) |
+| GitHub Next — Agentic Workflows | [githubnext.com/projects/agentic-workflows](https://githubnext.com/projects/agentic-workflows/) |
+| gh-aw Source Repository | [github/gh-aw](https://github.com/github/gh-aw) |
+| Agentics Collection (Pre-built Workflows) | [githubnext/agentics](https://github.com/githubnext/agentics) |
+| Agent Workflow Firewall | [github/gh-aw-firewall](https://github.com/github/gh-aw-firewall) |
+| MCP Gateway | [github/gh-aw-mcpg](https://github.com/github/gh-aw-mcpg) |
+| Security Architecture | [Architecture Docs](https://github.github.io/gh-aw/introduction/architecture/) |
+| Community Feedback | [GitHub Discussions](https://github.com/orgs/community/discussions/186451) |
 
 ---
 
 ## 🤝 Contributing
 
-Found a bug? Have an idea? [Open an issue](https://github.com/shinyay/REPO_NAME/issues/new) — contributions and suggestions are welcome.
-
-<!-- TEMPLATE: For larger projects, link to a CONTRIBUTING.md instead:
-     See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
--->
+Found a bug? Have an idea? [Open an issue](https://github.com/shinyay/agentic-worflows-quick-start/issues/new) — contributions and suggestions are welcome.
 
 ---
 
 ## ⭐ Support
 
-<!-- TEMPLATE: DELETE if you don't want a CTA section. Useful for open-source projects
-     seeking community engagement. -->
-
 If this project helps you, please consider:
 - ⭐ Starring this repository
-- 🐛 [Reporting issues](https://github.com/shinyay/REPO_NAME/issues/new)
+- 🐛 [Reporting issues](https://github.com/shinyay/agentic-worflows-quick-start/issues/new)
 - 📢 Sharing with others
 
 ---
