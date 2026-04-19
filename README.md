@@ -100,6 +100,19 @@ If you see a new **GitHub Issue** with a daily status report — your setup work
 | **[Getting Started Tutorial](doc/getting-started-tutorial.md)** | 10-step walkthrough with "🔍 What Just Happened?" explanations for each step |
 | **[gh aw CLI Reference](doc/gh-aw-cli-reference.md)** | Complete reference for all 29 CLI commands with flags, examples, and recipes |
 | **[GitHub Agentic Workflows Research](doc/github-agentic-workflows-https-github-github-io-gh.md)** | Deep research report covering architecture, security model, safe outputs, tools, triggers, and more |
+| **[📚 Deep Dive Documentation](doc/deep-dive/README.md)** ([🇯🇵](doc/deep-dive/README.ja.md)) | 14 in-depth, bilingual (EN+JP) topic guides covering architecture, engines, frontmatter, triggers, MCP, safe outputs, AWF, threat detection, imports, cookbook, debugging, glossary, FAQ, and a walkthrough of this repo |
+
+### 📚 Deep Dive Documentation (NEW)
+
+A comprehensive, layered, bilingual (EN + 日本語) documentation set in [`doc/deep-dive/`](doc/deep-dive/). 14 topics, each with TL;DR → Key Concepts → Deep Dive → Examples → Pitfalls/FAQ, and Mermaid diagrams.
+
+**Learning paths:**
+
+- 🟢 **Beginner**: [12 Walkthrough](doc/deep-dive/12-this-repos-workflows-walkthrough.md) → [13 Glossary](doc/deep-dive/13-glossary-and-concepts.md) → [04 Triggers](doc/deep-dive/04-triggers-and-scheduling.md) → [06 Safe Outputs](doc/deep-dive/06-safe-outputs-catalog.md) → [14 FAQ](doc/deep-dive/14-faq-and-troubleshooting.md)
+- 🔵 **Developer**: [01 Architecture](doc/deep-dive/01-architecture-and-security.md) → [03 Frontmatter](doc/deep-dive/03-frontmatter-reference.md) → [05 Tools/MCP](doc/deep-dive/05-tools-and-mcp.md) → [10 Cookbook](doc/deep-dive/10-writing-workflows-cookbook.md) → [09 Imports](doc/deep-dive/09-imports-and-shared-components.md) → [02 Engines](doc/deep-dive/02-engines.md) → [11 Debugging](doc/deep-dive/11-debugging-and-observability.md)
+- 🔴 **Security/Platform**: [01 Architecture](doc/deep-dive/01-architecture-and-security.md) → [07 AWF](doc/deep-dive/07-awf-firewall-and-sandbox.md) → [08 Threat Detection](doc/deep-dive/08-threat-detection-and-xpia.md) → [06 Safe Outputs](doc/deep-dive/06-safe-outputs-catalog.md) → [02 Engines](doc/deep-dive/02-engines.md)
+
+→ Start with the **[Deep Dive index](doc/deep-dive/README.md)** ([日本語版](doc/deep-dive/README.ja.md))
 
 ---
 

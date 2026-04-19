@@ -1,5 +1,14 @@
 # GitHub Agentic Workflows — Ultra-Deep Research Report
 
+> _Based on gh-aw v0.61.0 · Last reviewed 2026-04_
+
+> 📚 **See also — Deep Dive:** This research report is a single-document narrative. For a topic-organized companion set with bilingual (EN/JP) coverage, see the [Deep Dive documentation set](./deep-dive/README.md). Most relevant cross-references:
+> - [01 — Architecture & Security](./deep-dive/01-architecture-and-security.md) — defense-in-depth model
+> - [06 — Safe Outputs Catalog](./deep-dive/06-safe-outputs-catalog.md) — every safe-output type
+> - [13 — Glossary & Concepts](./deep-dive/13-glossary-and-concepts.md) — terms used throughout
+>
+> _Note: feature lists below were captured at the time of research. For the current authoritative feature set, cross-check the deep-dive topic docs._
+
 ## Executive Summary
 
 GitHub Agentic Workflows (gh-aw) is a new automation paradigm developed by **GitHub Next** and **Microsoft Research** that enables repository automation through natural language markdown files executed by AI coding agents (GitHub Copilot CLI, Claude by Anthropic, OpenAI Codex, or Google Gemini) within GitHub Actions[^1][^2]. Unlike traditional GitHub Actions workflows written in complex YAML, agentic workflows let you describe automation intent in plain English markdown, and a compiler (`gh aw compile`) translates them into hardened GitHub Actions YAML (`.lock.yml` files) with built-in security guardrails including sandboxed execution, network isolation, read-only default permissions, output sanitization, and threat detection[^3][^4]. The system is currently in **technical preview** as of February 2026[^5], and the core implementation is open source at [github/gh-aw](https://github.com/github/gh-aw).
@@ -269,6 +278,8 @@ Custom API endpoints are also supported via `OPENAI_BASE_URL` (for Codex) and `A
 
 ## 6. Security Architecture (Defense-in-Depth)
 
+> 🔗 **Deep Dive:** [01 — Architecture & Security](./deep-dive/01-architecture-and-security.md)
+
 ### Adversary Model
 
 The security architecture considers an adversary that may compromise untrusted user-level components (containers) and cause them to behave arbitrarily within granted privileges. The adversary may attempt to[^9]:
@@ -319,6 +330,8 @@ XPIA attacks occur when malicious instructions are embedded in external data (is
 ---
 
 ## 7. Safe Outputs System
+
+> 🔗 **Deep Dive:** [06 — Safe Outputs Catalog](./deep-dive/06-safe-outputs-catalog.md) (current authoritative list of safe-output types)
 
 The SafeOutputs subsystem is the core mechanism enabling agentic workflows to perform write operations while maintaining security[^16]. The AI agent generates structured output describing desired actions, which are processed by **separate permission-controlled jobs** that execute only after the agent completes.
 
@@ -519,6 +532,8 @@ The MCP Gateway routes all MCP server calls through a unified HTTP gateway for c
 
 ## 9. Network Controls and Sandbox
 
+> 🔗 **Deep Dive:** [07 — AWF Firewall & Sandbox](./deep-dive/07-awf-firewall-and-sandbox.md)
+
 ### Agent Workflow Firewall (AWF)
 
 AWF is the default sandbox that containerizes the agent, binds it to a Docker network, and uses **iptables to redirect HTTP/HTTPS traffic through a Squid proxy container**. The Squid proxy controls the agent's egress traffic via a configurable domain allowlist[^23].
@@ -592,6 +607,8 @@ The sandbox provides access to 12 language runtimes[^11]:
 ---
 
 ## 10. Threat Detection Pipeline
+
+> 🔗 **Deep Dive:** [08 — Threat Detection & XPIA](./deep-dive/08-threat-detection-and-xpia.md)
 
 Threat detection is **automatically enabled** when safe outputs are configured. It runs as a separate job between the agent job and safe output jobs[^18].
 
@@ -714,6 +731,8 @@ The compiler assigns each workflow a unique, deterministic execution time based 
 ---
 
 ## 12. Imports and Modularity
+
+> 🔗 **Deep Dive:** [09 — Imports & Shared Components](./deep-dive/09-imports-and-shared-components.md)
 
 ### Import System
 

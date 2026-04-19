@@ -1,6 +1,13 @@
 # GitHub Agentic Workflows — Step-by-Step Getting Started Tutorial
 
+> _Based on gh-aw v0.61.0 · Last reviewed 2026-04_
+
 This tutorial walks you through setting up and running your first GitHub Agentic Workflow in this repository (`agentic-worflows-quick-start`).
+
+> 📚 **See also — Deep Dive:** For conceptual background and reference material that complements this tutorial, see the [Deep Dive documentation set](./deep-dive/README.md). Most relevant to this tutorial:
+> - [10 — Writing Workflows Cookbook](./deep-dive/10-writing-workflows-cookbook.md) — patterns and recipes
+> - [03 — Frontmatter Reference](./deep-dive/03-frontmatter-reference.md) — every field explained
+> - [11 — Debugging & Observability](./deep-dive/11-debugging-and-observability.md) — when your first run misbehaves
 
 ---
 
@@ -143,7 +150,7 @@ gh aw secrets set GEMINI_API_KEY --value "your_gemini_key_here"
 | `OPENAI_API_KEY` | An **OpenAI API key** for Codex access. Billed to your OpenAI account |
 | `GEMINI_API_KEY` | A **Google AI Studio API key** for Gemini access. Billed to your Google account |
 
-**Where secrets are stored**: Secrets are encrypted and stored in **GitHub Actions secret storage** — they're never exposed in logs, workflow files, or to the AI agent itself. The agent runs in a read-only sandbox and authenticates through a separate, isolated process.
+**Where secrets are stored**: Secrets are encrypted and stored in **GitHub Actions secret storage** — they're never exposed in logs, workflow files, or to the AI agent itself. The agent runs in a read-only sandbox and authenticates through a separate, isolated process. (See [Deep Dive 07 — AWF Firewall & Sandbox](./deep-dive/07-awf-firewall-and-sandbox.md) for how the sandbox isolates the agent.)
 
 **`gh aw secrets bootstrap`** is a verification tool that:
 1. Scans all your workflow files to determine which engine secrets are needed
@@ -339,10 +346,10 @@ gh aw run issue-greeter
 ```
 
 **What `gh aw compile` produced** (the `.lock.yml` file):
-- Full GitHub Actions YAML with multiple jobs (pre-activation, agent, threat detection, safe outputs)
+- Full GitHub Actions YAML with multiple jobs (pre-activation, agent, [threat detection](./deep-dive/08-threat-detection-and-xpia.md), [safe outputs](./deep-dive/06-safe-outputs-catalog.md))
 - All referenced GitHub Actions **SHA-pinned** to exact commit hashes
-- Network firewall configuration with domain allowlists
-- MCP server configurations for GitHub API tools
+- Network firewall configuration with domain allowlists (see [Deep Dive 07 — AWF Firewall & Sandbox](./deep-dive/07-awf-firewall-and-sandbox.md))
+- MCP server configurations for GitHub API tools (see [Deep Dive 05 — Tools & MCP](./deep-dive/05-tools-and-mcp.md))
 - Permission separation: agent job is read-only, safe output jobs get scoped write permissions
 
 **💡 Key insight — the "edit without recompile" property**:
@@ -351,8 +358,8 @@ gh aw run issue-greeter
 - **No recompilation needed** for instruction changes!
 
 **⚠️ When you MUST recompile** (`gh aw compile`):
-- Any change to the **frontmatter** (triggers, permissions, tools, safe-outputs, network, engine)
-- Adding or removing **imports**
+- Any change to the **frontmatter** (triggers, permissions, tools, safe-outputs, network, engine) — see [Deep Dive 03 — Frontmatter Reference](./deep-dive/03-frontmatter-reference.md)
+- Adding or removing **imports** — see [Deep Dive 09 — Imports & Shared Components](./deep-dive/09-imports-and-shared-components.md)
 - Changing **MCP server configurations**
 
 > **Rule of thumb**: If you changed anything between the `---` markers, run `gh aw compile`.

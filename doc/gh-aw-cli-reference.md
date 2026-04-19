@@ -1,6 +1,13 @@
 # `gh aw` CLI Extension — Complete Reference Guide
 
 > **Version**: v0.61.0 | **Source**: [github/gh-aw](https://github.com/github/gh-aw) | **Docs**: [github.github.io/gh-aw](https://github.github.io/gh-aw/)
+>
+> _Based on gh-aw v0.61.0 · Last reviewed 2026-04_
+
+> 📚 **See also — Deep Dive:** This reference focuses on CLI commands. For conceptual background on what these commands operate on, see the [Deep Dive documentation set](./deep-dive/README.md). Most relevant:
+> - [02 — Engines](./deep-dive/02-engines.md) — what `--engine` flags configure
+> - [05 — Tools & MCP](./deep-dive/05-tools-and-mcp.md) — what `gh aw mcp` and `mcp-server` interact with
+> - [11 — Debugging & Observability](./deep-dive/11-debugging-and-observability.md) — companion to `logs`, `audit`, `health`
 
 ---
 
@@ -592,7 +599,7 @@ Checks dependency health without performing upgrades:
 
 ### 4.1 `gh aw compile` — Compile Workflows (Core Command)
 
-The **most important command** — transforms Markdown workflow files (`.md`) into hardened GitHub Actions YAML (`.lock.yml`).
+The **most important command** — transforms Markdown workflow files (`.md`) into hardened GitHub Actions YAML (`.lock.yml`). For a deeper walkthrough of what each pipeline step produces, see [Deep Dive 01 — Architecture & Security](./deep-dive/01-architecture-and-security.md).
 
 **Compilation pipeline**:
 1. Schema validation of frontmatter
@@ -873,7 +880,7 @@ gh aw status --json
 
 ### 4.6 `gh aw domains` — Network Domain Inspection
 
-Lists network domains configured in workflows, including expanded ecosystem identifiers.
+Lists network domains configured in workflows, including expanded ecosystem identifiers. (For how the domain allowlist is enforced at runtime, see [Deep Dive 07 — AWF Firewall & Sandbox](./deep-dive/07-awf-firewall-and-sandbox.md).)
 
 ```bash
 # Summary of all workflows with domain counts
@@ -901,7 +908,7 @@ When showing domains for a specific workflow, it expands ecosystem identifiers (
 
 ### 4.7 `gh aw mcp` — MCP Server Management
 
-Manage Model Context Protocol servers configured in workflows. Has four subcommands.
+Manage Model Context Protocol servers configured in workflows. Has four subcommands. (See [Deep Dive 05 — Tools & MCP](./deep-dive/05-tools-and-mcp.md) for the full MCP integration model.)
 
 #### `gh aw mcp list` — List MCP Servers
 
@@ -1199,7 +1206,7 @@ gh aw disable ci-doctor --repo owner/repo
 
 ### 6.1 `gh aw audit` — Deep-Dive Run Analysis
 
-Audits a single workflow run by downloading artifacts/logs, detecting errors, analyzing MCP tool usage, and generating a detailed Markdown report.
+Audits a single workflow run by downloading artifacts/logs, detecting errors, analyzing MCP tool usage, and generating a detailed Markdown report. (See [Deep Dive 11 — Debugging & Observability](./deep-dive/11-debugging-and-observability.md) for an end-to-end debugging workflow that uses `audit` together with `logs` and `health`.)
 
 **Accepted input formats**:
 - Numeric run ID: `1234567890`
