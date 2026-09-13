@@ -28,9 +28,6 @@
 
 name: "GitHub Changelog 週次サマリー（日本語版）"
 "on":
-  schedule:
-  - cron: "30 8 * * 1"
-    # Friendly format: weekly on monday around 9am (scattered)
   workflow_dispatch:
 
 permissions: {}
