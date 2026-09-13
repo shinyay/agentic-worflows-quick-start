@@ -5,7 +5,6 @@ description: |
   新機能、API変更、廃止予定などの最新情報を日本語でチームに共有するのに便利です。
 
 on:
-  schedule: weekly on monday around 9am
   workflow_dispatch:
 
 permissions:
