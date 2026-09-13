@@ -6,7 +6,6 @@ description: |
   API changes, and deprecations.
 
 on:
-  schedule: weekly on monday around 9am
   workflow_dispatch:
 
 permissions:
